@@ -28,9 +28,9 @@ export default function ResultsClient({ result }: Props) {
     createdAt,
   } = result
 
-  const criticalRisks = risks.filter((r) => r.severity === 'critical')
-  const highRisks     = risks.filter((r) => r.severity === 'high')
-  const otherRisks    = risks.filter((r) => r.severity !== 'critical' && r.severity !== 'high') 
+  const criticalRisks = risks.filter((r) => r.severity === 'CRITICAL')
+  const highRisks     = risks.filter((r) => r.severity === 'HIGH')
+  const otherRisks    = risks.filter((r) => r.severity !== 'CRITICAL' && r.severity !== 'HIGH')
 
   return (
     <div className="min-h-screen bg-el-bg">

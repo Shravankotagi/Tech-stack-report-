@@ -44,9 +44,9 @@ export default async function AuditResultPage(
       dataArchitecture: audit.dataArch,
     }),
     technologies:    audit.technologies    as string[],
-    strengths:       audit.strengths       as AuditResult['strengths'],
-    risks:           audit.risks           as AuditResult['risks'],
-    recommendations: audit.recommendations as AuditResult['recommendations'],
+    strengths:       audit.strengths       as unknown as AuditResult['strengths'],
+    risks:           audit.risks           as unknown as AuditResult['risks'],
+    recommendations: audit.recommendations as unknown as AuditResult['recommendations'],
     createdAt:       audit.createdAt.toISOString(),
   }
 
