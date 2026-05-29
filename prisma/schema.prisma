@@ -1,0 +1,38 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Audit {
+  id              String         @id @default(cuid())
+  shareId         String         @unique
+  inputText       String         @db.Text
+  overallScore    Int
+  scalability     Int
+  observability   Int
+  security        Int
+  cicdMaturity    Int
+  dataArch        Int
+  maturityLevel   String
+  summary         String         @db.Text
+  technologies    String[]
+  strengths       Json
+  risks           Json
+  recommendations Json
+  createdAt       DateTime       @default(now())
+  emailsSent      EmailCapture[]
+}
+
+model EmailCapture {
+  id        String   @id @default(cuid())
+  email     String
+  name      String
+  company   String?
+  auditId   String
+  audit     Audit    @relation(fields: [auditId], references: [id])
+  createdAt DateTime @default(now())
+}
