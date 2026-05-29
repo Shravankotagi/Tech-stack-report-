@@ -12,7 +12,7 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: 'Tech Stack Auditor — Enlight Lab',
+  title: 'Enlight Lab - Tech Stack Auditor',
   description:
     'Paste your tech stack or job listing and get an instant AI-powered risk and gap analysis with Enlight Lab service recommendations.',
   keywords: [
