@@ -9,7 +9,7 @@ const model = genAI.getGenerativeModel({
   model: 'gemini-3.1-flash-lite',
   generationConfig: {
     responseMimeType: 'application/json',
-    temperature: 0.3,       // Low temp = consistent, structured output
+    temperature: 0.3,
     topP: 0.8,
     maxOutputTokens: 2048,
   },
@@ -45,7 +45,6 @@ export async function runAudit(stackText: string): Promise<{
     // Parse JSON
     let parsed: unknown
     try {
-      // Strip any accidental markdown fences
       const cleaned = responseText
         .replace(/^```json\s*/i, '')
         .replace(/^```\s*/i, '')
@@ -60,7 +59,21 @@ export async function runAudit(stackText: string): Promise<{
       }
     }
 
-    // Validate with Zod
+    // ── Check for insufficient input error returned by AI ──────────────────
+    if (
+      parsed &&
+      typeof parsed === 'object' &&
+      (parsed as Record<string, unknown>).error === true
+    ) {
+      const errObj = parsed as { error: true; code: string; message: string }
+      return {
+        success: false,
+        error: errObj.message ?? 'Your input does not contain enough detail for a meaningful audit. Please describe your frontend, backend, database, and infrastructure.',
+        code: 'AI_ERROR',
+      }
+    }
+
+    // ── Validate with Zod ──────────────────────────────────────────────────
     const validation = validateAuditOutput(parsed)
     if (!validation.success) {
       const errMsg = (validation as { success: false; error: string }).error
