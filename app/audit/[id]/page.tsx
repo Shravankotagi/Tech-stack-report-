@@ -6,9 +6,10 @@ import ResultsClient from './ResultsClient'
 
 // ── Generate metadata for OG share previews ───────────────────────────────
 export async function generateMetadata(
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ): Promise<Metadata> {
-  const audit = await prisma.audit.findUnique({ where: { shareId: params.id } })
+  const { id } = await params
+  const audit = await prisma.audit.findUnique({ where: { shareId: id } })
   if (!audit) return { title: 'Audit Not Found' }
   return {
     title: `Tech Stack Audit — Score ${audit.overallScore}/100 | Enlight Lab`,
@@ -22,9 +23,10 @@ export async function generateMetadata(
 
 // ── Server Component: fetch data ──────────────────────────────────────────
 export default async function AuditResultPage(
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const audit = await prisma.audit.findUnique({ where: { shareId: params.id } })
+  const { id } = await params
+  const audit = await prisma.audit.findUnique({ where: { shareId: id } })
   if (!audit) notFound()
 
   const result: AuditResult = {
