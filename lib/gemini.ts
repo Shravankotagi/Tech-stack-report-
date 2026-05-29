@@ -63,10 +63,11 @@ export async function runAudit(stackText: string): Promise<{
     // Validate with Zod
     const validation = validateAuditOutput(parsed)
     if (!validation.success) {
+      const errMsg = (validation as { success: false; error: string }).error
       return {
         success: false,
-        error: `Validation failed: ${validation.error}`,
-        code: 'VALIDATION_ERROR',
+        error: `Validation failed: ${errMsg}`,
+        code: 'VALIDATION_ERROR' as const,
       }
     }
 
