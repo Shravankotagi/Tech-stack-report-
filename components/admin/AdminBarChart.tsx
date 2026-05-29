@@ -16,17 +16,22 @@ interface ChartData {
 }
 
 interface AdminBarChartProps {
-  data: ChartData[]
+  audits: any[]
 }
 
-export default function AdminBarChart({ data }: AdminBarChartProps) {
-  if (!data || data.length === 0) {
-    return (
-      <div className="flex items-center justify-center h-48 text-el-muted text-sm">
-        No data available yet.
-      </div>
-    )
-  }
+export default function AdminBarChart({ audits }: AdminBarChartProps) {
+  const data: ChartData[] = audits.reduce((acc: ChartData[], audit: any) => {
+    const risks = audit.risks as any[] ?? []
+    risks.forEach((risk: any) => {
+      const existing = acc.find((d) => d.name === risk.severity)
+      if (existing) {
+        existing.count++
+      } else {
+        acc.push({ name: risk.severity, count: 1 })
+      }
+    })
+    return acc
+  }, [])
 
   return (
     <ResponsiveContainer width="100%" height={300}>
